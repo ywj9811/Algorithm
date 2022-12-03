@@ -1,20 +1,19 @@
 package Programmers.level1;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 public class Marathon {
     public String solution(String[] participant, String[] completion) {
-        String answer = "";
-        List<String> part = new ArrayList<>(Arrays.asList(participant));
-        for (int i = 0; i < completion.length; i++) {
-            part.remove(completion[i]);
+        Collections.sort(Arrays.asList(participant));
+        Collections.sort(Arrays.asList(completion));
+
+        for (int i = 0; i < participant.length - 1; i++) {
+            if (!participant[i].equals(completion[i]))
+                return participant[i];
         }
-        for (int i = 0; i < part.size(); i++) {
-            answer += part.get(i);
-        }
-        return answer;
+
+        return participant[participant.length-1];
     }
 
     /**
