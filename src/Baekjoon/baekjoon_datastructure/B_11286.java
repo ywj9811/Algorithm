@@ -32,7 +32,7 @@ public class B_11286 {
                     sb.append(0 + "\n");
                 }
             } else {
-                pq.offer(x);
+                pq.add(x);
             }
         }
         System.out.println(sb);
