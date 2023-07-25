@@ -71,14 +71,6 @@ class Result4 {
         // 문자열의 마지막부터 시작
         count = p.length();
         while (right >= 0) {
-            if (freq[s.charAt(right--) - 'a']-- > 0)
-                count--;
-
-            if (count == 0)
-                break;
-        }
-
-        while (right >= len) {
             char currentChar = s.charAt(right);
             int index = currentChar - 'a';
             int currentFrequency = freq[index];
