@@ -78,12 +78,12 @@ public class B_14499 {
                     dice[4] = tmp;
             }
 
-            // 0인경우 주사위 바닥 -> 맵
+            // 0인경우 주사위 바닥을 복사
             if (board[X][Y] == 0) {
                 board[X][Y] = dice[5];
             }
 
-            // board이 0이 아닌 경우 맵 -> 주사위 복사, 맵은 0으로 된다.
+            // 주사위 바닥에 복사, 0으로
             else {
                 dice[5] = board[X][Y];
                 board[X][Y] = 0;
