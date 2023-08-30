@@ -1,0 +1,6 @@
+SELECT
+    (price - (price % 10000))as PRICE_GROUP,
+    COUNT(*) AS products
+FROM PRODUCT
+GROUP BY PRICE_GROUP
+order by PRICE_GROUP
