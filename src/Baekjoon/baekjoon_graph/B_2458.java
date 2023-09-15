@@ -8,6 +8,7 @@ import java.util.*;
 public class B_2458 {
     static int n;
     static int m;
+    static boolean[] visited;
     static List<Integer>[] in;
     static List<Integer>[] out;
     public static void main(String[] args) throws IOException {
@@ -17,6 +18,10 @@ public class B_2458 {
         m = Integer.parseInt(st.nextToken());
         in = new List[n+1];
         out = new List[n+1];
+        for (int i = 0; i < n+1; i++) {
+            in[i] = new ArrayList<>();
+            out[i] = new ArrayList<>();
+        }
         int inIdx;
         int outIdx;
         for (int i = 0; i < m; i++) {
@@ -26,14 +31,55 @@ public class B_2458 {
             out[inIdx].add(outIdx);
             in[outIdx].add(inIdx);
         }
+
+        int cnt = 0;
+        for (int i = 1; i < n+1; i++) {
+            visited = new boolean[n+1];
+            visited[i] = true;
+            visited[0] = true;
+            if (check(i))
+                cnt++;
+        }
+
+        System.out.println(cnt);
     }
 
-    static void check(int me) {
-        Set<Integer> checkSet = new HashSet<>();
+    static boolean check(int me) {
         Queue<Integer> queue = new LinkedList<>();
-
         for (int i = 0; i < in[me].size(); i++) {
-            checkSet.add(in[me].get(i));
+            queue.add(in[me].get(i));
         }
+
+        while (!queue.isEmpty()) {
+            int poll = queue.poll();
+            if (visited[poll]) {
+                continue;
+            }
+            visited[poll] = true;
+            for (int i = 0; i < in[poll].size(); i++) {
+                queue.add(in[poll].get(i));
+            }
+        }
+
+        for (int i = 0; i < out[me].size(); i++) {
+            queue.add(out[me].get(i));
+        }
+
+        while (!queue.isEmpty()) {
+            int poll = queue.poll();
+            if (visited[poll]) {
+                continue;
+            }
+            visited[poll] = true;
+            for (int i = 0; i < out[poll].size(); i++) {
+                queue.add(out[poll].get(i));
+            }
+        }
+
+        for (boolean isFalse : visited) {
+            if (!isFalse)
+                return false;
+        }
+        return true;
     }
 }
