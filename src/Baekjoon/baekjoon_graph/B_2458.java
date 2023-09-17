@@ -1,85 +1,59 @@
 package Baekjoon.baekjoon_graph;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
+import java.io.*;
 
 public class B_2458 {
-    static int n;
-    static int m;
-    static boolean[] visited;
-    static List<Integer>[] in;
-    static List<Integer>[] out;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        in = new List[n+1];
-        out = new List[n+1];
-        for (int i = 0; i < n+1; i++) {
-            in[i] = new ArrayList<>();
-            out[i] = new ArrayList<>();
-        }
-        int inIdx;
-        int outIdx;
-        for (int i = 0; i < m; i++) {
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringTokenizer st;
+    static boolean[][] check; // 이어져있는지
+    static int N, M;
+
+    public static void main(String[] args) throws Exception {
+        int answer = 0;
+
+        st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+
+        check = new boolean[N][N];
+        for (int i = 0; i < N; i++)
+            Arrays.fill(check[i], false);
+
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            inIdx = Integer.parseInt(st.nextToken());
-            outIdx = Integer.parseInt(st.nextToken());
-            out[inIdx].add(outIdx);
-            in[outIdx].add(inIdx);
+            int from = Integer.parseInt(st.nextToken()) - 1;
+            int to = Integer.parseInt(st.nextToken()) - 1;
+            check[from][to] = true;
         }
 
-        int cnt = 0;
-        for (int i = 1; i < n+1; i++) {
-            visited = new boolean[n+1];
-            visited[i] = true;
-            visited[0] = true;
-            if (check(i))
-                cnt++;
-        }
-
-        System.out.println(cnt);
-    }
-
-    static boolean check(int me) {
-        Queue<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < in[me].size(); i++) {
-            queue.add(in[me].get(i));
-        }
-
-        while (!queue.isEmpty()) {
-            int poll = queue.poll();
-            if (visited[poll]) {
-                continue;
-            }
-            visited[poll] = true;
-            for (int i = 0; i < in[poll].size(); i++) {
-                queue.add(in[poll].get(i));
+        for (int k = 0; k < N; k++) { // 경유지
+            for (int i = 0; i < N; i++) { // 출발지
+                for (int j = 0; j < N; j++) { // 도착지
+                    if (k == i || i == j || k == j)
+                        continue;
+                    if (check[i][j])
+                        continue;
+                    if (check[i][k] == true && check[k][j] == true)
+                        check[i][j] = true;
+                    // 한단계씩 갈 수 있는지 체크 갈 수 있다면 true
+                }
             }
         }
 
-        for (int i = 0; i < out[me].size(); i++) {
-            queue.add(out[me].get(i));
-        }
+        for (int i = 0; i < N; i++) {
+            boolean flag = true;
+            for (int j = 0; j < N; j++) {
+                if (i == j || check[i][j] || check[j][i])
+                    continue;
+                // n번이 m번까지 모두 연결되어있다면 계속 continue하여 flag가 true
+                flag = false;
+                break;
 
-        while (!queue.isEmpty()) {
-            int poll = queue.poll();
-            if (visited[poll]) {
-                continue;
             }
-            visited[poll] = true;
-            for (int i = 0; i < out[poll].size(); i++) {
-                queue.add(out[poll].get(i));
-            }
+            if (flag)
+                answer++;
         }
-
-        for (boolean isFalse : visited) {
-            if (!isFalse)
-                return false;
-        }
-        return true;
+        System.out.println(answer);
     }
 }
