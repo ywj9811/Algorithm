@@ -1,52 +1,41 @@
 package Baekjoon.baekjoon_math;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class B_11660 {
-    public static void main(String[] args) {
-        int[][] board;
-        int[][] answer;
-        Scanner sc = new Scanner(System.in);
-
-        int n = sc.nextInt();
-        int want = sc.nextInt();
-
-        board = new int[n+1][n+1];
-        answer = new int[n+1][n+1];
-        for (int i = 1; i <= n; i++)
-            Arrays.fill(answer[i], 0);
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int[][] arr = new int[n+1][n+1];
+        int[][] dp = new int[n+1][n+1];
+        for (int i = 1; i <= n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int j = 1; j <= n; j++) {
+                arr[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
-                board[i][j] = sc.nextInt();
+                dp[i][j] = dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1] + arr[i][j];
             }
         }
-
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                if (j-1 == 0) {
-                    answer[i][j] = answer[i-1][n] + board[i][j];
-                    continue;
-                }
-                answer[i][j] = answer[i][j-1] + board[i][j];
-            }
+        for (int k = 1; k <= m; k++) {
+            st = new StringTokenizer(br.readLine());
+            int x1 = Integer.parseInt(st.nextToken());
+            int y1 = Integer.parseInt(st.nextToken());
+            int x2 = Integer.parseInt(st.nextToken());
+            int y2 = Integer.parseInt(st.nextToken());
+            int ans = dp[x2][y2] - dp[x2][y1-1] - dp[x1-1][y2] + dp[x1-1][y1-1];
+            sb.append(ans + "\n");
         }
-
-        for (int i = 0; i < want; i++) {
-            int s1 = sc.nextInt();
-            int s2 = sc.nextInt();
-            int e1 = sc.nextInt();
-            int e2 = sc.nextInt();
-
-            int result = 0;
-            for (int j = s1; j <= e1; j++) {
-                if (s2 == 1) {
-                    result += answer[j][e2] - answer[j-1][n];
-                    continue;
-                }
-                result += (answer[j][e2] - answer[j][s2-1]);
-            }
-            System.out.println(result);
-        }
+        System.out.print(sb);
     }
 }
+
+/**
+ *
+ */
