@@ -7,24 +7,19 @@ public class B_11659 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
-        int want = sc.nextInt();
-        int[] num = new int[n+1];
-        int[] answer = new int[n+1];
-        Arrays.fill(answer, 0);
+        int m = sc.nextInt();
 
+        int[] dp = new int[n+1];
+        dp[0] = 0;
         for (int i = 1; i <= n; i++) {
-            num[i] = sc.nextInt();
+            dp[i] = dp[i-1] + sc.nextInt();
         }
 
-        for (int i = 1; i <= n; i++) {
-            answer[i] = answer[i-1] + num[i];
-        }
-
-        for (int i = 0; i < want; i++) {
+        for (int i = 0; i < m; i++) {
             int start = sc.nextInt();
             int end = sc.nextInt();
 
-            System.out.println(answer[end] - answer[start-1]);
+            System.out.println(dp[end] - dp[start-1]);
         }
     }
 }

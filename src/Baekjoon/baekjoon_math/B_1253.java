@@ -1,59 +1,48 @@
 package Baekjoon.baekjoon_math;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class B_1253 {
     public static void main(String[] args) throws IOException {
-        int cnt = 0;
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        int[] nums = new int[n];
-        int goal;
+        Scanner sc = new Scanner(System.in);
+        int count = 0;
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-
+        int n = sc.nextInt();
+        long[] numbers = new long[n];
         for (int i = 0; i < n; i++) {
-            nums[i] = Integer.parseInt(st.nextToken());
+            numbers[i] = sc.nextLong();
         }
 
-        Arrays.sort(nums);
+        Arrays.sort(numbers);
 
-        int a = 0;
-        int b = n-1;
-        goal = n-1;
-
-        while (goal >= 0) {
-            if (a == goal) {
-                a++;
-                continue;
+        for (int k = 0; k < n; k++) {
+            int i = 0;
+            int j = n-1;
+            long number = numbers[k];
+            while (i < j) {
+                if (number == numbers[i] + numbers[j]) {
+                    if (i == k) {
+                        i++;
+                        continue;
+                    }
+                    if (j == k ) {
+                        j--;
+                        continue;
+                    }
+//                    System.out.println(number + " = " + numbers[i] + " , " + numbers[j]);
+                    count++;
+                    break;
+                }
+                if (number < numbers[i] + numbers[j]) {
+                    j--;
+                    continue;
+                }
+                i++;
             }
-            if (b == goal) {
-                b--;
-                continue;
-            }
-            if (a == b) {
-                goal--;
-                a = 0;
-                b = n-1;
-                continue;
-            }
-            if (nums[a] + nums[b] == nums[goal]) {
-                cnt++;
-                goal--;
-                a = 0;
-                b = n-1;
-                continue;
-            }
-            if (nums[a] + nums[b] < nums[goal]) {
-                a++;
-                continue;
-            }
-            b--;
         }
 
-        System.out.println(cnt);
+        System.out.println(count);
     }
 }
