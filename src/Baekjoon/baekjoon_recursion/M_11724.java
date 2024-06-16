@@ -1,35 +1,36 @@
 package Baekjoon.baekjoon_recursion;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class M_11724 {
     private static boolean[] visited;
-    private static List<Integer>[] nodes;
-    private static int count = 1;
+    private static Set<Integer>[] nodes;
+    private static Stack<Integer> stack = new Stack();
+    private static int count = 0;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
 
-        visited = new boolean[n+1];
-        nodes = new List[n+1];
-        for (int i = 0; i < nodes.length; i++) {
-            nodes[i] = new ArrayList<>();
-        }
-        visited[0] = true;
+        int node = sc.nextInt();
+        int conn = sc.nextInt();
 
-        for (int i = 1; i < m+1; i++) {
-            int in = sc.nextInt();
-            int out = sc.nextInt();
-            nodes[in].add(out);
-            nodes[out].add(in);
+        nodes = new HashSet[node+1];
+        visited = new boolean[node+1];
+
+        for (int i = 1; i <= node; i++)  {
+            visited[i] = false;
+            nodes[i] = new HashSet<>();
         }
 
-        dfs(1);
-        for (int i = 0; i < visited.length; i++) {
+        for (int i = 1; i <= conn; i++) {
+            int start = sc.nextInt();
+            int end = sc.nextInt();
+
+            nodes[start].add(end);
+            nodes[end].add(start);
+        }
+
+        for (int i = 1; i < nodes.length; i++) {
             if (!visited[i]) {
                 count++;
                 dfs(i);
@@ -39,14 +40,18 @@ public class M_11724 {
         System.out.println(count);
     }
 
-    private static void dfs(int in) {
-        if (visited[in])
+    static void dfs(int node) {
+        if (!visited[node]) {
+            stack.push(node);
+            visited[node] = true;
+        }
+        if (stack.isEmpty()) {
             return;
-        visited[in] = true;
-        for (int i : nodes[in]) {
-            if (!visited[i]) {
-                dfs(i);
-            }
+        }
+        Integer pop = stack.pop();
+
+        for (int conNode : nodes[pop]) {
+            dfs(conNode);
         }
     }
 }
