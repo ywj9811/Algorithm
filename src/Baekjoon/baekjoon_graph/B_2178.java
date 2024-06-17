@@ -1,8 +1,6 @@
 package Baekjoon.baekjoon_graph;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 public class B_2178 {
@@ -15,12 +13,12 @@ public class B_2178 {
         public int y;
     }
     private static boolean[][] visited;
-    private static int[][] map;
     private static int[][] board;
-    private static int n;
-    private static int m;
-    private static int[] dx = {0,0,-1,1};
-    private static int[] dy = {-1,1,0,0};
+    private static int[][] result;
+    private static int[] dx = new int[]{1, -1, 0, 0};
+    private static int[] dy = new int[]{0, 0, -1, 1};
+    private static Queue<Node> queue = new LinkedList<>();
+    private static boolean exit = false;
 
     /**
      * 4 6
@@ -30,46 +28,45 @@ public class B_2178 {
      * 111011
      */
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        st = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(st.nextToken());
-        m = Integer.parseInt(st.nextToken());
-        map = new int[n+1][m+1];
-        board = new int[n+1][m+1];
-        visited = new boolean[n+1][m+1];
+        Scanner sc = new Scanner(System.in);
 
-        for (int i = 1; i <= n; i++) {
-            st = new StringTokenizer(br.readLine());
-            String s = st.nextToken();
-            String[] split = s.split("");
-            for (int j = 1; j <= m; j++) {
-                map[i][j] = Integer.parseInt(split[j-1]);
-                board[i][j] = 1;
+        int x = sc.nextInt();
+        int y = sc.nextInt();
+        visited = new boolean[x][y];
+        board = new int[x][y];
+        result = new int[x][y];
+
+        for (int i = 0; i < x; i++) {
+            Arrays.fill(visited[i], false);
+            Arrays.fill(result[i], 1);
+        }
+
+        for (int i = 0; i < x; i++) {
+            String input = sc.next();
+            String[] split = input.split("");
+            for (int j = 0; j < y; j++) {
+                board[i][j] = Integer.parseInt(split[j]);
             }
         }
 
+        queue.add(new Node(0,0));
         bfs();
-
-        System.out.println(board[n][m]);
+        System.out.println(result[x-1][y-1]);
     }
 
     private static void bfs() {
-        Queue<Node> queue = new LinkedList();
-        Node nowNode = new Node(1, 1);
-        queue.add(nowNode);
-        visited[nowNode.x][nowNode.y] = true;
         while (!queue.isEmpty()) {
-            Node now = queue.poll();
+            Node node = queue.poll();
+            int x = node.x;
+            int y = node.y;
+            visited[x][y] = true;
             for (int i = 0; i < 4; i++) {
-                if (
-                        now.y+dy[i] <= m && now.x+dx[i] <= n && now.x+dx[i] >= 0 && now.y+dy[i] >= 0
-                        && !visited[now.x+dx[i]][now.y+dy[i]]
-                        && map[now.x+dx[i]][now.y+dy[i]] == 1
-                ) {
-                    board[now.x+dx[i]][now.y+dy[i]] = board[now.x][now.y]+1;
-                    queue.add(new Node(now.x+dx[i], now.y+dy[i]));
-                    visited[now.x+dx[i]][now.y+dy[i]] = true;
+                if (x+dx[i] >= 0 && y+dy[i] >= 0 && x+dx[i] < board.length && y+dy[i] < board[0].length) {
+                    Node nextNode = new Node(x + dx[i], y + dy[i]);
+                    if (!visited[nextNode.x][nextNode.y] && board[nextNode.x][nextNode.y] == 1) {
+                        result[nextNode.x][nextNode.y] = result[x][y]+1;
+                        queue.add(nextNode);
+                    }
                 }
             }
         }
