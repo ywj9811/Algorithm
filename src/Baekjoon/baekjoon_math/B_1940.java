@@ -9,31 +9,31 @@ public class B_1940 {
 
         int n = sc.nextInt();
         int m = sc.nextInt();
-        int[] num = new int[n];
-        int cnt = 0;
-
+        int[] numbers = new int[n];
         for (int i = 0; i < n; i++) {
-            num[i] = sc.nextInt();
+            numbers[i] = sc.nextInt();
         }
+        int count = 0;
 
-        Arrays.sort(num);
+        Arrays.sort(numbers);
 
-        int a = 0;
-        int b = n-1;
+        int start = 0;
+        int end = n-1;
 
-        while (a < b) {
-            if (num[a] + num[b] < m) {
-                a++;
+        while (start < end) {
+            int sum = numbers[start] + numbers[end];
+            if (sum < m) {
+                start++;
                 continue;
             }
-            if (num[a] + num[b] == m) {
-                cnt++;
-                a++;
+            if (sum > m) {
+                end--;
                 continue;
             }
-            b--;
+            count++;
+            start++;
         }
 
-        System.out.println(cnt);
+        System.out.println(count);
     }
 }
