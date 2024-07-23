@@ -3,28 +3,34 @@ package Baekjoon.baekjoon_graph;
 import java.util.Scanner;
 
 public class B_1717 {
-    static int[] nodes;
+    private static int[] nodes;
+    private static int n;
+    private static int m;
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        int n = sc.nextInt();
-        int m = sc.nextInt();
+        n = sc.nextInt();
+        m = sc.nextInt();
 
         nodes = new int[n+1];
-        for (int i = 0; i < n+1; i++) {
+
+        for (int i = 0; i <= n; i++) {
             nodes[i] = i;
         }
 
         for (int i = 0; i < m; i++) {
-            int isUnion = sc.nextInt();
-            int first = sc.nextInt();
-            int second = sc.nextInt();
+            int check = sc.nextInt();
+            int a = sc.nextInt();
+            int b = sc.nextInt();
 
-            if (isUnion == 0) {
-                union(first, second);
+            if (check == 0) {
+                union(a, b);
                 continue;
             }
-            if (find(first) == find(second)) {
+
+
+            if (find(a) == find(b)) {
                 System.out.println("YES");
                 continue;
             }
@@ -32,18 +38,16 @@ public class B_1717 {
         }
     }
 
-    private static void union(int first, int second) {
-        first = find(first);
-        second = find(second);
-
+    private static void union(int a, int b) {
+        int first = find(a);
+        int second = find(b);
         if (first != second)
             nodes[second] = first;
     }
 
-    private static int find(int value) {
-        if (value == nodes[value])
-            return value;
-        nodes[value] = find(nodes[value]);
-        return nodes[value];
+    private static int find(int a) {
+        if (nodes[a] == a)
+            return a;
+        return nodes[a] = find(nodes[a]);
     }
 }
