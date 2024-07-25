@@ -1,56 +1,52 @@
 package Baekjoon.baekjoon_graph;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.List;
+import java.util.Scanner;
 
 public class B_2252 {
-    static ArrayList<Integer>[] students;
-    static int[] inDegree;
-    static BufferedWriter bw;
+    private static List<Integer>[] nodes;
+    private static int[] students;
+    private static List<Integer> results = new ArrayList<>();
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        StringTokenizer input = new StringTokenizer(br.readLine());
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        int n = Integer.parseInt(input.nextToken());
-        int m = Integer.parseInt(input.nextToken());
+        int n = sc.nextInt();
+        int m = sc.nextInt();
 
-        students = new ArrayList[n+1];
-        for (int i = 0 ; i < students.length; i++) {
-            students[i] = new ArrayList<>();
+        nodes = new List[n+1];
+        students = new int[n+1];
+        students[0] = -1;
+
+        for (int i = 0; i <= n; i++) {
+            nodes[i] = new ArrayList<>();
         }
-        inDegree = new int[n+1];
 
         for (int i = 0; i < m; i++) {
-            input = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(input.nextToken());
-            int b = Integer.parseInt(input.nextToken());
-            inDegree[b]++;
-            students[a].add(b);
+            int start = sc.nextInt();
+            int end = sc.nextInt();
+            nodes[start].add(end);
+            students[end]++;
         }
 
-        degree();
-        bw.flush();
-        bw.close();
-        br.close();
+        while (check()) {
+        }
+
+        results.forEach(result -> System.out.print(result + " "));
     }
 
-    static void degree() throws IOException {
-        boolean isFin = true;
-        for (int i = 1; i < inDegree.length; i++) {
-            if (inDegree[i] == 0) {
-                bw.write(i + " ");
-                inDegree[i]--;
-                for (int j = 0; j < students[i].size(); j++) {
-                    inDegree[students[i].get(j)]--;
+    private static boolean check() {
+        for (int i = 0; i < students.length; i++) {
+            if (students[i] == 0) {
+                results.add(i);
+                for (int student : nodes[i]) {
+                    students[student]--;
                 }
-                isFin = false;
+                students[i]--;
+                return true;
             }
         }
-        if (isFin)
-            return;
-        degree();
+        return false;
     }
 }

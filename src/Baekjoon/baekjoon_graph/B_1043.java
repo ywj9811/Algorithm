@@ -5,83 +5,74 @@ import java.util.List;
 import java.util.Scanner;
 
 public class B_1043 {
-    private static int[] nodes;
+    private static ArrayList<Integer>[] parties, participantsIn;
+    private static int[] knownPeople;
+    private static boolean[] canLie;
 
     public static void main(String[] args) {
+        int answer = 0;
         Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-        List<int[]> parties = new ArrayList<>();
 
-        nodes = new int[n+1];
+        //사람 - 참가 파티, 파티 - 참가자, 파티 결과 자료구조 초기화
+        int N = sc.nextInt();
+        int M = sc.nextInt();
 
-        for (int i = 1; i <=n; i++) {
-            nodes[i] = i;
+        parties = new ArrayList[N + 1];
+        for (int i = 1; i <= N; i++) {
+            parties[i] = new ArrayList<>();
+        }
+        participantsIn = new ArrayList[M];
+        for (int i = 0; i < M; i++) {
+            participantsIn[i] = new ArrayList<>();
+        }
+        canLie = new boolean[M];
+
+        //진실을 아는 사람 저장
+        int knownPeopleNum = sc.nextInt();
+        knownPeople = new int[knownPeopleNum];
+
+        for (int i = 0; i < knownPeopleNum; i++) {
+            knownPeople[i] = sc.nextInt();
         }
 
-        int t = sc.nextInt();
-        int first = 0;
-        if (t > 0)
-            first = sc.nextInt();
-        for (int i = 0; i < t-1; i ++) {
-            int input = sc.nextInt();
-            union(first, input);
-        } // 진실을 아는자 == nodes[first] 로 통일
+        //파티-참가자, 참가자-파티 저장
+        for (int party = 0; party < M; party++) {
+            int peopleNum = sc.nextInt();
 
-        for (int i = 0; i < m; i++) {
-            int size = sc.nextInt();
-            int[] people = new int[size];
-            for (int j = 0; j < size; j++ ){
-                people[j] = sc.nextInt();
-            }
-            parties.add(people);
-            for (int j = 1; j < size; j++) {
-                union(people[j-1], people[j]);
-            }
-        }
+            for (int j = 0; j < peopleNum; j++) {
+                int person = sc.nextInt();
 
-        for (int i = 0; i < parties.size(); i++) {
-            int[] party = parties.get(i);
-            for (int j = 1; j < party.length; j++) {
-                union(party[j-1], party[j]);
+                parties[person].add(party);
+                participantsIn[party].add(person);
             }
         }
 
-        int cnt = 0;
-        List<Integer> lie = new ArrayList<>();
-        for (int i = 1; i <= n; i++ ) {
-            if (find(i) == find(nodes[first])) {
-                lie.add(i);
+        //dfs
+        for (int i = 0; i < knownPeople.length; i++) {
+            dfs(knownPeople[i]);
+        }
+
+        for (int i = 0; i < canLie.length; i++) {
+            if (!canLie[i]) {
+                ++answer;
             }
         }
 
-        for (int i = 0; i < parties.size(); i++) {
-            int[] party = parties.get(i);
-            if (check(lie, party))
-                cnt++;
-        }
-
-        System.out.println(cnt);
+        System.out.println(answer);
     }
 
-    private static boolean check(List<Integer> lie, int[] party) {
-        for (int a : party) {
-            if (lie.contains(a))
-                return false;
+    private static void dfs(int person) {//dfs 기반 탐색
+        for (int i = 0; i < parties[person].size(); i++) {
+            int party = parties[person].get(i);
+
+            if (!canLie[party]) {
+                canLie[party] = true;
+
+                for (int j = 0; j < participantsIn[party].size(); j++) {
+                    int nextPerson = participantsIn[party].get(j);
+                    dfs(nextPerson);
+                }
+            }
         }
-        return true;
-    }
-
-    private static void union(int a, int b) {
-        int first = find(a);
-        int second = find(b);
-
-        nodes[second] = first;
-    }
-
-    private static int find(int a) {
-        if (nodes[a] == a)
-            return a;
-        return nodes[a] = nodes[nodes[a]];
     }
 }
