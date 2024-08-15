@@ -1,4 +1,4 @@
-package baekjoon_greedy;
+package Baekjoon.baekjoon_greedy;
 
 import java.util.Scanner;
 
@@ -6,11 +6,11 @@ public class B_11047 {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		
-		int n = sc.nextInt(); //µ·ÀÇ °¡Ä¡ n°³
-		int k = sc.nextInt(); //µ·
-		int arr[] = new int[n];//°¢ µ·ÀÇ ´ÜÀ§µé
+		int n = sc.nextInt(); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ nï¿½ï¿½
+		int k = sc.nextInt(); //ï¿½ï¿½
+		int arr[] = new int[n];//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		
-		int cnt = 0; //µ·ÀÇ °³¼ö.
+		int cnt = 0; //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 		
 		for(int i = 0; i < n; i++) {
 			arr[i] = sc.nextInt();

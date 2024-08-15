@@ -1,25 +1,40 @@
-package baekjoon_greedy;
+package Baekjoon.baekjoon_greedy;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 
 public class B_1715 {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
-		ArrayList<Integer> arr = new ArrayList<Integer>();
-		int n = sc.nextInt(); //비교 몇개 할것인가.
+		PriorityQueue<Integer> queue = new PriorityQueue<>();
+		int n = sc.nextInt();
 
-		for(int i = 0; i < n; i++) { 
-			arr.get(sc.nextInt());
+		for (int i = 0; i < n; i++) {
+			queue.add(sc.nextInt());
 		}
-		Collections.sort(arr);
 
-		if(arr.size() >= 2) {
-			int sum = arr.get(0) + arr.get(1);
-			for(int i = 2; i < arr.size(); i++) {
-				sum = arr.get(i);
+		int sum = 0;
+		int now = 0;
+
+		if (n == 1) {
+			System.out.println(0);
+			return;
+		}
+
+		while (!queue.isEmpty()) {
+			Integer first = queue.poll();
+			Integer second = 0;
+			if (!queue.isEmpty()) {
+				second = queue.poll();
 			}
+			now = first+second;
+			sum += now;
+			if (!queue.isEmpty())
+				queue.add(now);
 		}
+
+		System.out.println(sum);
 	}
 }
