@@ -1,38 +1,49 @@
 package Baekjoon.baekjoon_math;
 
-import java.io.*;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 public class B_11660 {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        StringBuilder sb = new StringBuilder();
-        int n = Integer.parseInt(st.nextToken());
-        int m = Integer.parseInt(st.nextToken());
-        int[][] arr = new int[n+1][n+1];
-        int[][] dp = new int[n+1][n+1];
-        for (int i = 1; i <= n; i++) {
-            st = new StringTokenizer(br.readLine());
-            for (int j = 1; j <= n; j++) {
-                arr[i][j] = Integer.parseInt(st.nextToken());
+    private static int[][] board;
+    private static int[][] sum;
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int size = sc.nextInt();
+        int count = sc.nextInt();
+        board = new int[size+1][size+1];
+        sum = new int[size+1][size+1];
+
+        for (int i = 1; i <= size; i++) {
+            for (int j = 1; j <= size; j++) {
+                board[i][j] = sc.nextInt();
+                if (j == 1) {
+                    sum[i][j] = board[i][j] + sum[i-1][size];
+                    continue;
+                }
+                sum[i][j] = board[i][j] + sum[i][j-1];
             }
         }
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                dp[i][j] = dp[i-1][j] + dp[i][j-1] - dp[i-1][j-1] + arr[i][j];
+
+        for (int i = 0; i < count; i++) {
+            int s1 = sc.nextInt();
+            int s2 = sc.nextInt();
+            int e1 = sc.nextInt();
+            int e2 = sc.nextInt();
+            int total = 0;
+            for (int j = 0; j <= e1-s1; j++) {
+                if (s2 == 1) {
+//                    System.out.println("end : " + sum[e1-j][e2]);
+//                    System.out.println("start : " + sum[e1-(j+1)][size]);
+                    total += sum[e1-j][e2] - sum[e1-(j+1)][size];
+                    continue;
+                }
+//                System.out.println("end : " + sum[e1-j][e2]);
+//                System.out.println("start : " + sum[e1-j][s2-1]);
+                total += sum[e1-j][e2] - sum[e1-j][s2-1];
             }
+
+            System.out.println(total);
         }
-        for (int k = 1; k <= m; k++) {
-            st = new StringTokenizer(br.readLine());
-            int x1 = Integer.parseInt(st.nextToken());
-            int y1 = Integer.parseInt(st.nextToken());
-            int x2 = Integer.parseInt(st.nextToken());
-            int y2 = Integer.parseInt(st.nextToken());
-            int ans = dp[x2][y2] - dp[x2][y1-1] - dp[x1-1][y2] + dp[x1-1][y1-1];
-            sb.append(ans + "\n");
-        }
-        System.out.print(sb);
     }
 }
 
