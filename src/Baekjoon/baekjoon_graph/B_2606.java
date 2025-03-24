@@ -3,62 +3,44 @@ package Baekjoon.baekjoon_graph;
 import java.util.*;
 
 public class B_2606 {
-    private static Node[] nodes;
+    private static int cnt;
     private static boolean[] visited;
-    private static int n;
+    private static ArrayList<Integer>[] nodes;
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        nodes = new Node[n+1];
+        int n = sc.nextInt();
+        int links = sc.nextInt();
+
         visited = new boolean[n+1];
+        nodes = new ArrayList[n+1];
 
         for (int i = 0; i <= n; i++) {
-            nodes[i] = new Node(i);
+            nodes[i] = new ArrayList<>();
         }
 
-        int m = sc.nextInt();
-        for (int i = 0 ; i < m; i++) {
-            int me = sc.nextInt();
-            int you = sc.nextInt();
+        for (int i = 0; i < links; i++) {
+            int s = sc.nextInt();
+            int e = sc.nextInt();
 
-            nodes[me].links.add(you);
-            nodes[you].links.add(me);
+            nodes[s].add(e);
+            nodes[e].add(s);
         }
 
-        int ans = bfs();
-
-        System.out.println(ans);
+        dfs(1);
+        System.out.println(cnt-1);
     }
 
-    private static int bfs() {
-        int cnt = 0;
-        Queue<Node> queue = new LinkedList<>();
-        queue.add(nodes[1]);
-        visited[1] = true;
+    private static void dfs(int node) {
+        if (visited[node])
+            return;
+        visited[node] = true;
+        cnt++;
 
-        while (!queue.isEmpty()) {
-            Node poll = queue.poll();
-            List<Integer> links = poll.links;
-            for (int link : links) {
-                if (visited[link])
-                    continue;
-                visited[link] = true;
-                cnt++;
-                queue.add(nodes[link]);
-            }
-        }
-
-        return cnt;
-    }
-
-    private static class Node {
-        int me;
-        List<Integer> links;
-
-        public Node(int me) {
-            this.me = me;
-            this.links = new ArrayList<>();
+        for (int next : nodes[node]) {
+            if (visited[next])
+                continue;
+            dfs(next);
         }
     }
 }

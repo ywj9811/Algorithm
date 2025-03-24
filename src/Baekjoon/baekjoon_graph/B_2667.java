@@ -1,71 +1,62 @@
 package Baekjoon.baekjoon_graph;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class B_2667 {
+    private static int[] dx = {1, -1, 0, 0};
+    private static int[] dy = {0, 0, -1, 1};
     private static int N;
-    private static ArrayList<Integer> aList = new ArrayList<>();
-    private static int[][] arr;
-    private static boolean[][] check;
-    private static int[] dx = {0, 0, 1, -1};
-    private static int[] dy = {1, -1, 0, 0};
+    private static int[][] board;
+    private static boolean[][] visited;
+    private static int cnt;
 
-    public static void main(String[] args) throws IOException {
+    private static List<Integer> results = new ArrayList<>();
+
+    public static void main(String[] args) throws Exception{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N =Integer.parseInt(br.readLine());
+        N = Integer.parseInt(br.readLine());
+        board = new int[N+1][N+1];
+        visited = new boolean[N+1][N+1];
 
-        arr= new int [N][N];
-        check= new boolean [N][N];
-
-        for(int i=0;i<N;i++) {
-            String[] s = br.readLine().split("");
-            for(int j=0;j<N;j++) {
-                arr[i][j]=Integer.parseInt(s[j]);
-            }
-        }
-
-
-        int k=0;
-        for(int i=0;i<N;i++) {
-            for(int j=0;j<N;j++) {
-                if(arr[i][j]==1&&!check[i][j]) {
-                    aList.add(k,1);
-                    dfs(i,j,k);
-                    k++;
+        for (int i = 1; i <= N; i++) {
+            String[] splits = br.readLine().split("");
+            for (int j = 1; j <= N; j++) {
+                board[i][j] = Integer.parseInt(splits[j-1]);
+                if (board[i][j] == 0) {
+                    visited[i][j] = true;
                 }
             }
         }
 
-        System.out.println(aList.size());
-        Collections.sort(aList);
-        for(int i : aList)
-            System.out.println(i);
-
-        br.close();
-
-    }// main()
-
-    private static void dfs(int x,int y,int k) {
-
-        check[x][y]=true;
-
-        for(int i=0;i<4;i++) {
-            int tX=x+dx[i];
-            int tY=y+dy[i];
-
-            if(tX>=0 && tY>=0 &&tX<N&&tY<N) {
-                if(!check[tX][tY]&&arr[tX][tY]==1) {
-                    int a = aList.get(k);
-                    aList.set(k,a+1);
-                    dfs(tX,tY,k);
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= N; j++) {
+                if (board[i][j] == 1 && visited[i][j] == false) {
+                    cnt = 0;
+                    dfs(i, j);
+                    if (cnt > 0)
+                        results.add(cnt);
                 }
             }
-
         }
+
+        results.sort((o1, o2) -> o1-o2);
+        System.out.println(results.size());
+        results.forEach(System.out::println);
     }
 
+    private static void dfs(int a, int b) {
+        visited[a][b] = true;
+        cnt++;
 
+        for (int i = 0; i < 4; i++) {
+            if (a+dx[i] > 0 && a+dx[i] <= N && b+dy[i] > 0 && b+dy[i] <= N && board[a+dx[i]][b+dy[i]] == 1) {
+                if (!visited[a+dx[i]][b+dy[i]]) {
+                    dfs(a+dx[i], b+dy[i]);
+                }
+            }
+        }
+    }
 }
