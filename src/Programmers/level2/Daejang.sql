@@ -1,0 +1,1 @@
+select * from ECOLI_DATA
