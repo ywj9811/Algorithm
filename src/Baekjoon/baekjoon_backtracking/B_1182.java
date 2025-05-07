@@ -1,5 +1,7 @@
 package Baekjoon.baekjoon_backtracking;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class B_1182 {
@@ -12,7 +14,6 @@ public class B_1182 {
         Scanner sc = new Scanner(System.in);
         n = sc.nextInt();
         s = sc.nextInt();
-
         nums = new int[n];
         for (int i = 0; i < n; i++){
             nums[i] = sc.nextInt();
