@@ -3,18 +3,24 @@ package Programmers.level2;
 import java.util.*;
 
 public class Clothes {
-    class Solution {
-        public int solution(String[][] clothes) {
-            int answer = 1;
+    public static void main(String[] args) {
+        new Clothes().solution(new String[][]{{"yellow_hat", "headgear"}});
+    }
 
-            Map<String, Integer> types = new HashMap<>();
-            for (String[] cloth : clothes) {
-                types.put(cloth[1], types.getOrDefault(cloth[1], 0)+1);
-            }
-            for (int cnt : types.values()) {
-                answer *= (cnt+1);
-            }
-            return answer-1;
+    public int solution(String[][] clothes) {
+        Map<String, ArrayList<String>> clothMap = new HashMap<>();
+
+        for (int i = 0; i < clothes.length; i++) {
+            clothMap.putIfAbsent(clothes[i][0], new ArrayList<>());
+            clothMap.get(clothes[i][1]).add(clothes[i][0]);
         }
+
+        int sum = 1;
+        Set<String> keySet = clothMap.keySet();
+        for (String key : keySet) {
+            sum *= (clothMap.get(key).size()+1);
+        }
+
+        return sum-1;
     }
 }
