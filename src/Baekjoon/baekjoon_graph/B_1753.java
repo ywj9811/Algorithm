@@ -1,74 +1,61 @@
 package Baekjoon.baekjoon_graph;
 
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Scanner;
 
 public class B_1753 {
-    private static List<Point>[] nodes;
-    private static final int INF = 100_000_000;
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int v = sc.nextInt();
+        int e = sc.nextInt();
+        int start = sc.nextInt();
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int v = Integer.parseInt(st.nextToken());
-        int e = Integer.parseInt(st.nextToken());
-        int start = Integer.parseInt(br.readLine());
-
+        List<Node>[] nodes = new List[v+1];
         int[] sum = new int[v+1];
-        nodes = new List[v+1];
 
-        Arrays.fill(sum, INF);
-
-        for(int i = 1; i <= v; i++){
+        for (int i = 0; i <= v; i++) {
             nodes[i] = new ArrayList<>();
+            sum[i] = Integer.MAX_VALUE;
         }
 
-        for (int i = 0; i < e; i++) {
-            st = new StringTokenizer(br.readLine());
-            nodes[Integer.parseInt(st.nextToken())]
-                    .add(
-                            new Point(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()))
-                    );
-        }
-
-        PriorityQueue<Point> queue = new PriorityQueue<>();
-        boolean[] check = new boolean[v + 1];
-        queue.add(new Point(start, 0));
         sum[start] = 0;
+        PriorityQueue<Node> pq = new PriorityQueue<>((Node a, Node b) -> a.cost - b.cost);
+        for (int i = 0; i < e; i++) {
+            int from = sc.nextInt();
+            int to = sc.nextInt();
+            int cost = sc.nextInt();
+            nodes[from].add(new Node(to, cost));
+        }
+        pq.add(new Node(start, 0));
 
-        while(!queue.isEmpty()){
-            Point curNode = queue.poll();
-            int cur = curNode.end;
-
-            if(check[cur] == true) continue;
-            check[cur] = true;
-
-            for(Point node : nodes[cur]){
-                if(sum[node.end] > sum[cur] + node.weight){
-                    sum[node.end] = sum[cur] + node.weight;
-                    queue.add(new Point(node.end, sum[node.end]));
+        while (!pq.isEmpty()) {
+            Node cur = pq.poll();
+            if (cur.cost > sum[cur.target]) continue;
+            for (Node next : nodes[cur.target]) {
+                if (sum[next.target] > sum[cur.target] + next.cost) {
+                    sum[next.target] = sum[cur.target] + next.cost;
+                    pq.add(new Node(next.target, sum[next.target]));
                 }
             }
         }
 
-        for(int i = 1; i <= v; i++){
-            if(sum[i] == INF)
+        for (int i = 1; i <= v; i++) {
+            if (sum[i] == Integer.MAX_VALUE)
                 System.out.println("INF");
             else
                 System.out.println(sum[i]);
         }
     }
-}
-class Point implements Comparable<Point>{
-    int end, weight;
 
-    public Point(int end, int weight){
-        this.end = end;
-        this.weight = weight;
-    }
+    private static class Node {
+        int target;
+        int cost;
 
-    @Override
-    public int compareTo(Point o) {
-        return weight - o.weight;
+        public Node(int target, int cost) {
+            this.target = target;
+            this.cost = cost;
+        }
     }
 }

@@ -1,77 +1,60 @@
 package Baekjoon.baekjoon_graph;
 
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Scanner;
 
 public class B_1916 {
-    private static List<Node>[] nodes;
-    private static boolean[] visited;
-    private static int[] values;
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+        int[] sum = new int[n+1];
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int n = Integer.parseInt(br.readLine());
-        int m = Integer.parseInt(br.readLine());
-
-        nodes = new LinkedList[n+1];
+        List<Node>[] nodes = new List[n+1];
         for (int i = 0; i <= n; i++) {
-            nodes[i] = new LinkedList<>();
+            sum[i] = Integer.MAX_VALUE;
+            nodes[i] = new ArrayList<>();
         }
-        visited = new boolean[n+1];
-        values = new int[n+1];
-        Arrays.fill(values, Integer.MAX_VALUE);
 
         for (int i = 0; i < m; i++) {
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            int me = Integer.parseInt(st.nextToken());
-            int num = Integer.parseInt(st.nextToken());
-            int value = Integer.parseInt(st.nextToken());
-
-            nodes[me].add(new Node(num, value));
+            int from = sc.nextInt();
+            int to = sc.nextInt();
+            int cost = sc.nextInt();
+            nodes[from].add(new Node(to, cost));
         }
 
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int start = Integer.parseInt(st.nextToken());
-        int end = Integer.parseInt(st.nextToken());
+        int from = sc.nextInt();
+        int to = sc.nextInt();
 
+        PriorityQueue<Node> pq = new PriorityQueue<>((Node a, Node b) -> a.cost - b.cost);
 
-        di(start, end);
-    }
-
-    private static void di(int start, int end) {
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-        queue.add(new Node(start, 0));
-        values[start] = 0;
-
-        while (!queue.isEmpty()) {
-            Node poll = queue.poll();
-            int now = poll.num;
-            if (!visited[now]) {
-                visited[now] = true;
-                for (Node next : nodes[poll.num]) {
-                    if (!visited[next.num] && values[next.num] > values[now] + next.value) {
-                        values[next.num] = values[now] + next.value;
-                        queue.add(new Node(next.num, values[next.num]));
-                    }
+        pq.add(new Node(from, 0));
+        sum[from] = 0;
+        while(!pq.isEmpty()) {
+            Node cur = pq.poll();
+            if (sum[cur.to] < cur.cost)
+                continue;
+            for (Node next : nodes[cur.to]) {
+                if (sum[next.to] <= sum[cur.to] + next.cost) {
+                    continue;
                 }
+                sum[next.to] = sum[cur.to] + next.cost;
+                pq.add(new Node(next.to, sum[next.to]));
             }
         }
 
-        System.out.println(values[end]);
+        System.out.println(sum[to]);
     }
 
-    private static class Node implements Comparable<Node> {
-        Node(int num, int value) {
-            this.num = num;
-            this.value = value;
-        }
-        int num;
-        int value;
+    private static class Node {
+        int to;
+        int cost;
 
-        @Override
-        public int compareTo(Node node) {
-            return this.value - node.value;
+        public Node(int to, int cost) {
+            this.to = to;
+            this.cost = cost;
         }
     }
 }
